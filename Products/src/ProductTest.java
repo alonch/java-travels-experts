@@ -1,4 +1,6 @@
 
+import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +26,21 @@ public class ProductTest {
 		p1 = new Product("Jet");
 		p2 = new Product();
 		
+		assertEquals("Jet", p1.ProdName());
+		
 		//edit product attribute
-		p2.ProdName("Ship");
+		p2.ProdName("Jet");
 		p2.ProductId(1);
 		
-		//show product attributes
+		assertEquals("Jet", p2.ProdName());
+		assertEquals(1, p2.ProductId());
+		
+		//get product attributes
+		p1.ProductId();
+		p1.ProdName();
+		
+				
+		//show product
 		p1.toString();
 		p2.toString();
 	}
