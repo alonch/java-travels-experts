@@ -2,7 +2,7 @@
 public class Product {
 
 	private int ProductId;
-	private String ProdName;
+	private String ProdName="";
 	
 	public Product(String name) {
 		this.ProdName=name;

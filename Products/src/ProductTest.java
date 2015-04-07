@@ -24,25 +24,21 @@ public class ProductTest {
 	public void test() {
 		//create product
 		p1 = new Product("Jet");
-		p2 = new Product();
 		
 		assertEquals("Jet", p1.ProdName());
+		assertNotNull(p1);
 		
-		//edit product attribute
+		p2 = new Product();
+		assertNotNull(p2);
+		assertEquals("", p2.ProdName());
+		
+		//edit and retrieve attributes
 		p2.ProdName("Jet");
-		p2.ProductId(1);
-		
 		assertEquals("Jet", p2.ProdName());
+		
+		p2.ProductId(1);
 		assertEquals(1, p2.ProductId());
 		
-		//get product attributes
-		p1.ProductId();
-		p1.ProdName();
-		
-				
-		//show product
-		p1.toString();
-		p2.toString();
 	}
 
 }
