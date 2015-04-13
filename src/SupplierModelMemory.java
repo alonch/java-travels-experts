@@ -2,15 +2,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SupplierModelMemory implements SupplierModel{
+public class SupplierModelMemory implements ItemModel{
 
-	List<Supplier> db = new ArrayList<Supplier>();
+	List<Item> db = new ArrayList<Item>();
 	
-	public void save(Supplier supplier) {
+	@Override
+	public void add(Item product) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void save(Item supplier) {
 		db.add(supplier);
 	}
 
-	public Supplier get(int id) {
+	public Item get(int id) {
 		return get().stream().filter(supplier -> supplier.getId() == id ).findFirst().get();
 	}
 
@@ -22,12 +28,13 @@ public class SupplierModelMemory implements SupplierModel{
 		}
 	}
 
-	public List<Supplier> get() {
+	public List<Item> get() {
 		return db;
 	}
 
 	@Override
 	public void reset() {
-		db = new ArrayList<Supplier>();
+		db = new ArrayList<Item>();
 	}
+	
 }

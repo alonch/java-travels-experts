@@ -1,32 +1,30 @@
 import static org.junit.Assert.*;
+
+import org.junit.Before;
 import org.junit.Test;
 
 public class ProductTest {
 
-	Product jet= new Product("Jet");;
-	Product car=new Product();;
+	Product car;
 
+	@Before
+	public void setUp() throws Exception {
+		car=new Product();;
+	}
+	
 	@Test
 	public void createJet() {
 		//create product
 		//jet = new Product("Jet");
-		assertEquals("Jet", jet.getProdName());
-		assertNotNull(jet);
-	}
-	@Test
-	public void createCar(){
-		//car = new Product();
 		assertNotNull(car);
-		assertEquals("", car.getProdName());
-		
 	}
 	@Test
 	public void editProductAttribute(){
-		car.setProdName("new car");
-		assertEquals("new car", car.getProdName());
+		car.setName("new car");
+		assertEquals("new car", car.getName());
 		
-		car.setProductId(1);
-		assertEquals(1, car.getProductId());
+		car.setId(1);
+		assertEquals(1, car.getId());
 	}
 
 }

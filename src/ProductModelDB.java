@@ -9,21 +9,21 @@ import java.util.List;
 
 // Team 4 - Mehmet Demirci 
 
-public class ProductModelDB implements ProductModel {
+public class ProductModelDB implements ItemModel {
 	
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rs;
 		
 	@Override
-	public void add(Product product) {
+	public void add(Item product) {
 		conn = TravelExpertsDB.GetConnection();
 		
 		try
         {  
 			stmt = conn.createStatement();
 
-            String strSQL = "Insert Into products (ProdName) Values('" + product.getProdName() + "')";
+            String strSQL = "Insert Into products (ProdName) Values('" + product.getName() + "')";
 
 			if (stmt.executeUpdate(strSQL) == 0)
 			{
@@ -39,15 +39,15 @@ public class ProductModelDB implements ProductModel {
 	}
 	
 	@Override
-	public void save(Product product) {
+	public void save(Item product) {
 		conn = TravelExpertsDB.GetConnection();
 		
 		try
 	    { 
 	      String query = "update products set ProdName = ? where ProductId = ?";
 	      PreparedStatement preparedStmt = conn.prepareStatement(query);
-	      preparedStmt.setString(1, product.getProdName());	      
-	      preparedStmt.setInt   (2, product.getProductId());	      
+	      preparedStmt.setString(1, product.getName());	      
+	      preparedStmt.setInt   (2, product.getId());	      
 	      preparedStmt.executeUpdate();
 	       
 	      conn.close();
@@ -60,7 +60,7 @@ public class ProductModelDB implements ProductModel {
 	}
 
 	@Override
-	public Product get(int id) {
+	public Item get(int id) {
 		Product product = new Product();		
 		conn = TravelExpertsDB.GetConnection();
 		
@@ -78,8 +78,8 @@ public class ProductModelDB implements ProductModel {
 				{
 					strArr[i] = rs.getString(i);
 				}
-				product.setProductId(Integer.parseInt(strArr[1]));
-				product.setProdName(strArr[2]);				
+				product.setId(Integer.parseInt(strArr[1]));
+				product.setName(strArr[2]);				
 			}
 			conn.close();
 		} catch (SQLException e) {
@@ -95,8 +95,8 @@ public class ProductModelDB implements ProductModel {
 	}
 
 	@Override
-	public List<Product> get() {
-		ArrayList<Product> products = new ArrayList<Product>();
+	public List<Item> get() {
+		ArrayList<Item> products = new ArrayList<Item>();
 		
 		conn = TravelExpertsDB.GetConnection();
 		
@@ -114,8 +114,8 @@ public class ProductModelDB implements ProductModel {
 				{
 					strArr[i] = rs.getString(i);
 				}
-				product.setProductId(Integer.parseInt(strArr[1]));
-				product.setProdName(strArr[2]);
+				product.setId(Integer.parseInt(strArr[1]));
+				product.setName(strArr[2]);
 				products.add(product);
 			}
 			conn.close();

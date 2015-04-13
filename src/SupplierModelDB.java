@@ -3,20 +3,26 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class SupplierModelDB implements SupplierModel {
+public class SupplierModelDB implements ItemModel {
 
 	private Connection conn;
-	private Statement stmt;
+	//private Statement stmt;
 	private ResultSet rs;
 	
 	@Override
-	public void save(Supplier supplier) {
+	public void add(Item product) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void save(Item supplier) {
 		connect();
 		try {
 			PreparedStatement ps = conn.prepareStatement("insert into suppliers(supplierid, supname) values (?, ?)");
@@ -97,16 +103,16 @@ public class SupplierModelDB implements SupplierModel {
 	}//end connect
 
 	@Override
-	public List<Supplier> get() {
+	public List<Item> get() {
 		connect();
-		ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
+		ArrayList<Item> suppliers = new ArrayList<Item>();
 		try {
 			PreparedStatement ps = conn.prepareStatement("select supplierid, supName from suppliers");
 			rs = ps.executeQuery();
 			while (rs.next())
 			{
-				int supplierId = rs.getInt(1);
-                String supName = rs.getString(2);
+				//int supplierId = rs.getInt(1);
+                //String supName = rs.getString(2);
 				Supplier supplier = new Supplier();
 				supplier.setId(rs.getInt(1));
 				supplier.setName(rs.getString(2));
@@ -139,5 +145,4 @@ public class SupplierModelDB implements SupplierModel {
 			}
 		}
 	}
-
 }
