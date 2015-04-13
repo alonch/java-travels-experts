@@ -1,9 +1,5 @@
-package products;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import products.Product;
-
 
 public class ProductTest {
 

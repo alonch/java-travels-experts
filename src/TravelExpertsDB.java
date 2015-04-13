@@ -8,7 +8,7 @@ public class TravelExpertsDB {
     {        
         Connection connection = null;
 		try {
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts", "root", "1234");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts", "root", "");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
