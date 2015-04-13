@@ -18,5 +18,8 @@ public class Supplier {
 	public String getName() {
 		return name;
 	}
+	public static void main(String[] args) {
+		System.out.println("hello world");
+	}
 
 }

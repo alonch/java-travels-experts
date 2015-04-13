@@ -1,3 +1,4 @@
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class SupplierModelTest {
 
 	@Before
 	public void setUp() throws Exception {
-		model = new SupplierModel();
+		model = new SupplierModelDB();
 
 		airCanada = new Supplier();
 		airCanada.setId(10);
@@ -38,14 +39,26 @@ public class SupplierModelTest {
 	@Test(expected = NoSuchElementException.class)
 	public void deleteTest() {
 		model.delete(airCanada.getId());
+		
 		model.get(airCanada.getId()); //will raise NoSuchElementException
 	}
+	
+	@Test
+	public void deleteIsolateTest() {
+		model.delete(airCanada.getId());
+		model.get(westjet.getId());// Not exception
+	}
+	
+	
 
 	@Test
 	public void getAllSuppliersTest(){
 		List<Supplier> all = model.get();
 		assertEquals(2, all.size());
-		assertTrue(all.contains(westjet));
-		assertTrue(all.contains(airCanada));
+		assertTrue(all.get(0).getId() == westjet.getId() || all.get(0).getId() == airCanada.getId());
+	}
+	@After
+	public void tearDown(){
+		model.reset();
 	}
 }
