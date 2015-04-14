@@ -132,6 +132,23 @@ public class AgentModelDB implements AgentModel{
 		// TODO Auto-generated method stub
 		//set deleted
 		//customers assigned to this agent will get a new agent
+		try
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update agents "
+					+ "set deleted = "+1
+					+ " where AgentId = "+id;
+			PreparedStatement preparedStmt = conn.prepareStatement(query);      
+			preparedStmt.executeUpdate();
+	       
+			
+			conn.close();
+	    }
+	    catch (Exception e)
+	    {
+	      System.err.println("Got an exception! ");
+	      System.err.println(e.getMessage());
+	    }
 	}
 
 }

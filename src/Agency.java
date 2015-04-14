@@ -57,4 +57,7 @@ public class Agency {
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
+	public String toString(){
+		return address+", "+city;
+	}
 }

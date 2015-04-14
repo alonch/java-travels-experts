@@ -119,4 +119,51 @@ public class PackageModelDB implements PackageModel {
 		
 		return pkgs;
 	}
+
+	@Override
+	public void addProductSupplier(int packageId, int productSupplierId) {
+		PackageProductSupplierLinkModelDB linkMe = new PackageProductSupplierLinkModelDB();
+		if(linkMe.link(packageId, productSupplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
+
+	@Override
+	public void removeProductSupplier(int packageId, int productSupplierId) {
+		PackageProductSupplierLinkModelDB unLinkMe = new PackageProductSupplierLinkModelDB();
+		if(unLinkMe.unlink(packageId, productSupplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
+
+	@Override
+	public List<PackageProductSupplierLink> getProductsSuppliers(int packageId) {
+		ArrayList<PackageProductSupplierLink> packageProductsSuppliers = null;
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from package_product_supplier where PackageId="+packageId;
+			rs = stmt.executeQuery(sql);
+			packageProductsSuppliers = new ArrayList<PackageProductSupplierLink>();
+			while (rs.next())
+			{
+				PackageProductSupplierLink packageProductSupplier= new PackageProductSupplierLink();
+				packageProductSupplier.setPackageId(rs.getInt("PackageId"));
+				packageProductSupplier.setProductSupplierId(rs.getInt("ProductSupplierId"));
+				
+				packageProductsSuppliers.add(packageProductSupplier);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return packageProductsSuppliers;
+	}
 }

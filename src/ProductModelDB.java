@@ -129,4 +129,22 @@ public class ProductModelDB implements ItemModel {
 	public void reset() {
 		// TODO Auto-generated method stub	
 	}
+	public void addSupplier(int productId, int supplierId){
+		ProductSupplierLinkModelDB linkMe = new ProductSupplierLinkModelDB();
+		if(linkMe.link(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
+	public void removeSupplier(int productId, int supplierId){
+		ProductSupplierLinkModelDB unLinkMe = new ProductSupplierLinkModelDB();
+		if(unLinkMe.unlink(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
 }

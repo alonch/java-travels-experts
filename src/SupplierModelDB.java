@@ -145,4 +145,22 @@ public class SupplierModelDB implements ItemModel {
 			}
 		}
 	}
+	public void addProduct(int supplierId, int productId){
+		ProductSupplierLinkModelDB linkMe = new ProductSupplierLinkModelDB();
+		if(linkMe.link(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
+	public void removeProduct(int supplierId, int productId){
+		ProductSupplierLinkModelDB unLinkMe = new ProductSupplierLinkModelDB();
+		if(unLinkMe.unlink(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
 }

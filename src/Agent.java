@@ -48,4 +48,7 @@ public class Agent extends Person{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String toString(){
+		return super.getFirstName()+" "+super.getLastName();
+	}
 }
