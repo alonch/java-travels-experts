@@ -17,10 +17,10 @@ public class ProductModelDB implements ItemModel {
 		
 	@Override
 	public void add(Item product) {
-		conn = TravelExpertsDB.GetConnection();
 		
 		try
         {  
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 
             String strSQL = "Insert Into products (ProdName) Values('" + product.getName() + "')";
@@ -40,17 +40,16 @@ public class ProductModelDB implements ItemModel {
 	
 	@Override
 	public void save(Item product) {
-		conn = TravelExpertsDB.GetConnection();
-		
 		try
-	    { 
-	      String query = "update products set ProdName = ? where ProductId = ?";
-	      PreparedStatement preparedStmt = conn.prepareStatement(query);
-	      preparedStmt.setString(1, product.getName());	      
-	      preparedStmt.setInt   (2, product.getId());	      
-	      preparedStmt.executeUpdate();
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update products set ProdName = ? where ProductId = ?";
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			preparedStmt.setString(1, product.getName());	      
+			preparedStmt.setInt   (2, product.getId());	      
+			preparedStmt.executeUpdate();
 	       
-	      conn.close();
+			conn.close();
 	    }
 	    catch (Exception e)
 	    {
@@ -61,16 +60,16 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public Item get(int id) {
-		Product product = new Product();		
-		conn = TravelExpertsDB.GetConnection();
-		
+		Product product =null;
 		try 
-		{
+		{	
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 			String sql = "select * from products where ProductId = " + id;
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
+			product = new Product();
 			while (rs.next())
 			{				
 				String[] strArr = new String[5];
@@ -96,16 +95,16 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public List<Item> get() {
-		ArrayList<Item> products = new ArrayList<Item>();
-		
-		conn = TravelExpertsDB.GetConnection();
+		ArrayList<Item> products = null;
 		
 		try {
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 			String sql = "select * from products";
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
+			products = new ArrayList<Item>();
 			while (rs.next())
 			{
 				Product product = new Product();
