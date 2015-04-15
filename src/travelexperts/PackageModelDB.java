@@ -171,17 +171,17 @@ public class PackageModelDB implements PackageModel {
 
 	@Override
 	public List<Package> getByCustomerId(int customerId) {
-ArrayList<Package> pkgs = null;
+ArrayList<Package> pkgs = new ArrayList<Package>();
 		
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from packages where "
+			String sql = "select * from packages, bookings, customers where "
 					+ "customers.CustomerId="+customerId+" and "
 					+ " customers.CustomerId=bookings.CustomerId and "
 					+ "bookings.PackageId=packages.PackageId";
 			rs = stmt.executeQuery(sql);
-			pkgs = new ArrayList<Package>();
+			
 			while (rs.next())
 			{
 				Package pkg= new Package();
