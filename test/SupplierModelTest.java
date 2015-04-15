@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class SupplierModelTest {
 
-	private SupplierModel model;
+	private ItemModel model;
 	private Supplier airCanada;
 	private Supplier westjet;
 
@@ -32,7 +32,7 @@ public class SupplierModelTest {
 
 	@Test
 	public void addTest() {
-		Supplier savedSupplier = model.get(airCanada.getId());
+		Supplier savedSupplier = (Supplier) model.get(airCanada.getId());
 		assertEquals(airCanada.getName(), savedSupplier.getName());
 	}
 
@@ -53,7 +53,7 @@ public class SupplierModelTest {
 
 	@Test
 	public void getAllSuppliersTest(){
-		List<Supplier> all = model.get();
+		List<Item> all = model.get();
 		assertEquals(2, all.size());
 		assertTrue(all.get(0).getId() == westjet.getId() || all.get(0).getId() == airCanada.getId());
 	}
