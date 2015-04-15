@@ -1,5 +1,3 @@
-package travelexperts;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.List;
@@ -19,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Window.Type;
+import javax.swing.ListSelectionModel;
 
 
 public class ProductsUI extends JFrame {
@@ -140,6 +139,7 @@ public class ProductsUI extends JFrame {
 		populateDTM();
 		
 		tblProducts = new JTable(dtm);		
+		tblProducts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tblProducts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {	
