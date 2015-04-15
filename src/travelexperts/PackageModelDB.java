@@ -168,4 +168,39 @@ public class PackageModelDB implements PackageModel {
 		}
 		return packageProductsSuppliers;
 	}
+
+	@Override
+	public List<Package> getByCustomerId(int customerId) {
+ArrayList<Package> pkgs = null;
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from packages where "
+					+ "customers.CustomerId="+customerId+" and "
+					+ " customers.CustomerId=bookings.CustomerId and "
+					+ "bookings.PackageId=packages.PackageId";
+			rs = stmt.executeQuery(sql);
+			pkgs = new ArrayList<Package>();
+			while (rs.next())
+			{
+				Package pkg= new Package();
+				pkg.setId(rs.getInt("PackageId"));
+				pkg.setName(rs.getString("PkgName"));
+				pkg.setStartDate(rs.getDate("PkgStartDate"));
+				pkg.setEndDate(rs.getDate("PkgEndDate"));
+				pkg.setDescription(rs.getString("PkgDesc"));
+				pkg.setBasePrice(rs.getDouble("PkgBasePrice"));
+				pkg.setAgencyCommission(rs.getDouble("PkgAgencyCommission"));
+				pkg.setDeleted(rs.getBoolean("deleted"));
+				
+				pkgs.add(pkg);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return pkgs;
+	}
 }
