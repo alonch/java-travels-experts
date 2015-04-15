@@ -16,7 +16,7 @@ public class PackageProductSupplierLinkModelDB implements PackageProductSupplier
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 			String strSQL = "Insert Into packages_products_suppliers Values("
-					+packageId+","+productSupplierId;
+					+packageId+","+productSupplierId+")";
 
 			if (stmt.executeUpdate(strSQL) == 0)
 			{

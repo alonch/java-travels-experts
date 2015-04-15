@@ -230,6 +230,7 @@ ArrayList<ProductSupplierLink> productsSuppliers = null;
 			while (rs.next())
 			{
 				ProductSupplierLink productSupplier= new ProductSupplierLink();
+				productSupplier.setId(rs.getInt("ProductSupplierId"));
 				productSupplier.setProductId(rs.getInt("ProductId"));
 				productSupplier.setSupplierId(rs.getInt("SupplierId"));
 				productSupplier.setProductName(rs.getString("ProdName"));

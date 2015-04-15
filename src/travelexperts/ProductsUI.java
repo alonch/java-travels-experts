@@ -1,7 +1,7 @@
-import java.awt.BorderLayout;
+package travelexperts;
+
 import java.awt.EventQueue;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,12 +16,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Window.Type;
-import javax.swing.ListSelectionModel;
 
 
 public class ProductsUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnEdit;
 	private JButton btnDelete;
@@ -139,7 +141,6 @@ public class ProductsUI extends JFrame {
 		populateDTM();
 		
 		tblProducts = new JTable(dtm);		
-		tblProducts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tblProducts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {	

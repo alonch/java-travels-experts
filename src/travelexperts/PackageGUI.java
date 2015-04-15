@@ -215,7 +215,7 @@ public class PackageGUI {
 				if (arg0.getClickCount() == 2) {
 		        	// Double-click detected
 		            //remove item
-		        	int id = ((ProductSupplierLink)(listIncludedProducts.getSelectedValue())).getId();
+		        	int id = ((ProductSupplierLink)(listNotIncludedProducts.getSelectedValue())).getId();
 		            pkgdb.addProductSupplier(pkg.getId(), id);
 		            //System.out.println("package="+pkg.getId()+" <> prodsup="+id);
 		            
