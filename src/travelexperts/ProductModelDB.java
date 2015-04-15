@@ -19,10 +19,10 @@ public class ProductModelDB implements ItemModel {
 		
 	@Override
 	public void add(Item product) {
-		conn = TravelExpertsDB.GetConnection();
 		
 		try
         {  
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 
             String strSQL = "Insert Into products (ProdName) Values('" + product.getName() + "')";
@@ -32,7 +32,7 @@ public class ProductModelDB implements ItemModel {
 			   System.out.println("no rows inserted");
 			}
                         
-            conn.close();  
+            //conn.close();  
         }
         catch (Exception excp)
         {
@@ -42,17 +42,16 @@ public class ProductModelDB implements ItemModel {
 	
 	@Override
 	public void save(Item product) {
-		conn = TravelExpertsDB.GetConnection();
-		
 		try
-	    { 
-	      String query = "update products set ProdName = ? where ProductId = ?";
-	      PreparedStatement preparedStmt = conn.prepareStatement(query);
-	      preparedStmt.setString(1, product.getName());	      
-	      preparedStmt.setInt   (2, product.getId());	      
-	      preparedStmt.executeUpdate();
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update products set ProdName = ? where ProductId = ?";
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			preparedStmt.setString(1, product.getName());	      
+			preparedStmt.setInt   (2, product.getId());	      
+			preparedStmt.executeUpdate();
 	       
-	      conn.close();
+			//conn.close();
 	    }
 	    catch (Exception e)
 	    {
@@ -63,16 +62,16 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public Item get(int id) {
-		Item product = new Item();		
-		conn = TravelExpertsDB.GetConnection();
-		
+		Product product =null;
 		try 
-		{
+		{	
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 			String sql = "select * from products where ProductId = " + id;
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
+			product = new Product();
 			while (rs.next())
 			{				
 				String[] strArr = new String[5];
@@ -83,7 +82,7 @@ public class ProductModelDB implements ItemModel {
 				product.setId(Integer.parseInt(strArr[1]));
 				product.setName(strArr[2]);				
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -93,38 +92,24 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public void delete(int id) {
-		try
-	    {
-			conn = TravelExpertsDB.GetConnection();
-			String query = "update products set deleted = 1 where ProductId = ?";
-			PreparedStatement preparedStmt = conn.prepareStatement(query);
-			preparedStmt.setInt(1, id);
-			preparedStmt.executeUpdate();       
-			
-			conn.close();
-	    }
-	    catch (Exception e)
-	    {
-	      System.err.println("Got an exception! ");
-	      System.err.println(e.getMessage());
-	    }
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public List<Item> get() {
-		ArrayList<Item> products = new ArrayList<Item>();
-		
-		conn = TravelExpertsDB.GetConnection();
+		ArrayList<Item> products = null;
 		
 		try {
+			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from products where deleted = 0";
+			String sql = "select * from products";
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
+			products = new ArrayList<Item>();
 			while (rs.next())
 			{
-				Item product = new Item();
+				Product product = new Product();
 				String[] strArr = new String[5];
 				for (int i=1; i<=numCols; i++)
 				{
@@ -134,7 +119,7 @@ public class ProductModelDB implements ItemModel {
 				product.setName(strArr[2]);
 				products.add(product);
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -145,5 +130,23 @@ public class ProductModelDB implements ItemModel {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub	
+	}
+	public void addSupplier(int productId, int supplierId){
+		ProductSupplierLinkModelDB linkMe = new ProductSupplierLinkModelDB();
+		if(linkMe.link(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
+	}
+	public void removeSupplier(int productId, int supplierId){
+		ProductSupplierLinkModelDB unLinkMe = new ProductSupplierLinkModelDB();
+		if(unLinkMe.unlink(productId, supplierId)){
+			//link successful
+		}
+		else{
+			//link not successful
+		}
 	}
 }

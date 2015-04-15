@@ -61,4 +61,7 @@ public class Package {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	public String toString(){
+		return name;
+	}
 }

@@ -1,6 +1,7 @@
 package travelexperts;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 //import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,7 +11,7 @@ public class ProductSupplierLinkModelDB implements ProductSupplierLinkModel{
 
 	private Connection conn;
 	private Statement stmt;
-	//private ResultSet rs;
+	private ResultSet rs;
 	
 	@Override
 	public boolean link(int productId, int supplierId) {
@@ -59,4 +60,35 @@ public class ProductSupplierLinkModelDB implements ProductSupplierLinkModel{
 		}
 		return unlinked;
 	}
+
+	@Override
+	public ProductSupplierLink get(int id) {
+		ProductSupplierLink psl = new ProductSupplierLink();
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select ps.ProductSupplierId, ps.ProductId, ps.SupplierId, p.ProdName, s.SupName "
+					+ "from products_suppliers ps, products p, suppliers s"
+					+ "where ps.ProductSupplierId="+id+" and "
+					+ "ps.ProductId=p.ProductId and"
+					+ "ps.SupplierId=s.SupplierId";
+			rs = stmt.executeQuery(sql);
+			System.out.println("heloo");
+			if (rs.next())
+			{
+				psl.setId(rs.getInt("ProductSupplierId"));
+				psl.setProductId(rs.getInt("ProductId"));
+				psl.setSupplierId(rs.getInt("SupplierId"));
+				psl.setProductName(rs.getString("ProdName"));
+				System.out.println(rs.getString("ProdName"));
+				psl.setSupplierName(rs.getString("SupName"));
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return psl;
+	}
+
 }

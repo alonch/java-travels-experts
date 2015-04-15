@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class PackageModelDB implements PackageModel {
@@ -30,7 +29,7 @@ public class PackageModelDB implements PackageModel {
 			   System.out.println("no rows inserted");
 			}
                  
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,7 +82,7 @@ public class PackageModelDB implements PackageModel {
 				pkg.setAgencyCommission(rs.getDouble("PkgAgencyCommission"));
 				pkg.setDeleted(rs.getBoolean("deleted"));
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -91,7 +90,7 @@ public class PackageModelDB implements PackageModel {
 	}
 
 	@Override
-	public List<Package> get() {
+	public ArrayList<Package> get() {
 		ArrayList<Package> pkgs = null;
 		
 		try {
@@ -114,7 +113,7 @@ public class PackageModelDB implements PackageModel {
 				
 				pkgs.add(pkg);
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -145,33 +144,41 @@ public class PackageModelDB implements PackageModel {
 	}
 
 	@Override
-	public List<PackageProductSupplierLink> getProductsSuppliers(int packageId) {
-		ArrayList<PackageProductSupplierLink> packageProductsSuppliers = null;
+	public ArrayList<ProductSupplierLink> getProductsSuppliers(int packageId) {
+		ArrayList<ProductSupplierLink> productsSuppliers = null;
 		
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from package_product_supplier where PackageId="+packageId;
+			String sql = "select ps.ProductSupplierId, ps.ProductId, ps.SupplierId, p.ProdName, s.SupName from "
+					+ "packages_products_suppliers pps, products_suppliers ps, products p, suppliers s "
+					+ "where pps.PackageId="+packageId+" and "
+					+ "pps.ProductSupplierId=ps.ProductSupplierId and "
+					+ "ps.productid=p.productid and "
+					+ "ps.supplierid=s.supplierid";
 			rs = stmt.executeQuery(sql);
-			packageProductsSuppliers = new ArrayList<PackageProductSupplierLink>();
+			productsSuppliers = new ArrayList<ProductSupplierLink>();
 			while (rs.next())
 			{
-				PackageProductSupplierLink packageProductSupplier= new PackageProductSupplierLink();
-				packageProductSupplier.setPackageId(rs.getInt("PackageId"));
-				packageProductSupplier.setProductSupplierId(rs.getInt("ProductSupplierId"));
+				ProductSupplierLink productSupplier= new ProductSupplierLink();
+				productSupplier.setId(rs.getInt("ProductSupplierId"));
+				productSupplier.setProductId(rs.getInt("ProductId"));
+				productSupplier.setSupplierId(rs.getInt("SupplierId"));
+				productSupplier.setProductName(rs.getString("ProdName"));
+				productSupplier.setSupplierName(rs.getString("SupName"));
 				
-				packageProductsSuppliers.add(packageProductSupplier);
+				productsSuppliers.add(productSupplier);
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return packageProductsSuppliers;
+		return productsSuppliers;
 	}
 
 	@Override
-	public List<Package> getByCustomerId(int customerId) {
-ArrayList<Package> pkgs = new ArrayList<Package>();
+	public ArrayList<Package> getByCustomerId(int customerId) {
+		ArrayList<Package> pkgs = new ArrayList<Package>();
 		
 		try {
 			conn = TravelExpertsDB.GetConnection();
@@ -196,11 +203,44 @@ ArrayList<Package> pkgs = new ArrayList<Package>();
 				
 				pkgs.add(pkg);
 			}
-			conn.close();
+			//conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return pkgs;
+	}
+
+	@Override
+	public ArrayList<ProductSupplierLink> getProductsSuppliersNot(
+			int packageId) {
+ArrayList<ProductSupplierLink> productsSuppliers = null;
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql1 = "select ProductSupplierId from packages_products_suppliers where PackageId="+packageId;
+			String sql = "select * from products_suppliers, products, suppliers "
+					+ "where ProductSupplierId not in ( "+sql1+" ) and "
+					+ "products_suppliers.productid=products.productid and "
+					+ "products_suppliers.supplierid=suppliers.supplierid";
+					
+			rs = stmt.executeQuery(sql);
+			productsSuppliers = new ArrayList<ProductSupplierLink>();
+			while (rs.next())
+			{
+				ProductSupplierLink productSupplier= new ProductSupplierLink();
+				productSupplier.setProductId(rs.getInt("ProductId"));
+				productSupplier.setSupplierId(rs.getInt("SupplierId"));
+				productSupplier.setProductName(rs.getString("ProdName"));
+				productSupplier.setSupplierName(rs.getString("SupName"));
+				
+				productsSuppliers.add(productSupplier);
+			}
+			//conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productsSuppliers;
 	}
 }
