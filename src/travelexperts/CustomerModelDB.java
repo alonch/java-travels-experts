@@ -1,5 +1,4 @@
 package travelexperts;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,4 +70,38 @@ public class CustomerModelDB implements CustomerModel {
 		return customers;
 	}
 
+	public List<Customer> get() {
+		ArrayList<Customer> customers = null;
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from customers";
+			rs = stmt.executeQuery(sql);
+			customers = new ArrayList<Customer>();
+			while (rs.next())
+			{
+				Customer customer= new Customer();
+				customer.setId(rs.getInt("CustomerId"));
+				customer.setFirstName(rs.getString("CustFirstName"));
+				customer.setLastName(rs.getString("CustLastName"));
+				customer.setAddress(rs.getString("CustAddress"));
+				customer.setCity(rs.getString("CustCity"));
+				customer.setProvince(rs.getString("CustProv"));
+				customer.setPostal(rs.getString("CustPostal"));
+				customer.setCountry(rs.getString("CustCountry"));
+				customer.setHomePhone(rs.getString("CustHomePhone"));
+				customer.setBusPhone(rs.getString("CustBusPhone"));
+				customer.setEmail(rs.getString("CustEmail"));
+				customer.setAgentId(rs.getInt("AgentId"));
+				
+				customers.add(customer);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return customers;
+	}
 }
