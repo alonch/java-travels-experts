@@ -19,10 +19,10 @@ public class ProductModelDB implements ItemModel {
 		
 	@Override
 	public void add(Item product) {
+		conn = TravelExpertsDB.GetConnection();
 		
 		try
         {  
-			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
 
             String strSQL = "Insert Into products (ProdName) Values('" + product.getName() + "')";
@@ -42,16 +42,17 @@ public class ProductModelDB implements ItemModel {
 	
 	@Override
 	public void save(Item product) {
+		conn = TravelExpertsDB.GetConnection();
+		
 		try
-	    {
-			conn = TravelExpertsDB.GetConnection();
-			String query = "update products set ProdName = ? where ProductId = ?";
-			PreparedStatement preparedStmt = conn.prepareStatement(query);
-			preparedStmt.setString(1, product.getName());	      
-			preparedStmt.setInt   (2, product.getId());	      
-			preparedStmt.executeUpdate();
+	    { 
+	      String query = "update products set ProdName = ? where ProductId = ?";
+	      PreparedStatement preparedStmt = conn.prepareStatement(query);
+	      preparedStmt.setString(1, product.getName());	      
+	      preparedStmt.setInt   (2, product.getId());	      
+	      preparedStmt.executeUpdate();
 	       
-			conn.close();
+	      conn.close();
 	    }
 	    catch (Exception e)
 	    {
@@ -62,16 +63,16 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public Item get(int id) {
-		Product product =null;
+		Item product = new Item();		
+		conn = TravelExpertsDB.GetConnection();
+		
 		try 
-		{	
-			conn = TravelExpertsDB.GetConnection();
+		{
 			stmt = conn.createStatement();
 			String sql = "select * from products where ProductId = " + id;
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
-			product = new Product();
 			while (rs.next())
 			{				
 				String[] strArr = new String[5];
@@ -92,24 +93,38 @@ public class ProductModelDB implements ItemModel {
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
+		try
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update products set deleted = 1 where ProductId = ?";
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			preparedStmt.setInt(1, id);
+			preparedStmt.executeUpdate();       
+			
+			conn.close();
+	    }
+	    catch (Exception e)
+	    {
+	      System.err.println("Got an exception! ");
+	      System.err.println(e.getMessage());
+	    }
 	}
 
 	@Override
 	public List<Item> get() {
-		ArrayList<Item> products = null;
+		ArrayList<Item> products = new ArrayList<Item>();
+		
+		conn = TravelExpertsDB.GetConnection();
 		
 		try {
-			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from products";
+			String sql = "select * from products where deleted = 0";
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numCols = rsmd.getColumnCount();
-			products = new ArrayList<Item>();
 			while (rs.next())
 			{
-				Product product = new Product();
+				Item product = new Item();
 				String[] strArr = new String[5];
 				for (int i=1; i<=numCols; i++)
 				{
@@ -130,23 +145,5 @@ public class ProductModelDB implements ItemModel {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub	
-	}
-	public void addSupplier(int productId, int supplierId){
-		ProductSupplierLinkModelDB linkMe = new ProductSupplierLinkModelDB();
-		if(linkMe.link(productId, supplierId)){
-			//link successful
-		}
-		else{
-			//link not successful
-		}
-	}
-	public void removeSupplier(int productId, int supplierId){
-		ProductSupplierLinkModelDB unLinkMe = new ProductSupplierLinkModelDB();
-		if(unLinkMe.unlink(productId, supplierId)){
-			//link successful
-		}
-		else{
-			//link not successful
-		}
 	}
 }
