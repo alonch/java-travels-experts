@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class SupplierModelTest {
 
-	private SupplierModel model;
+	private ItemModel model;
 	private Supplier airCanada;
 	private Supplier westjet;
 
