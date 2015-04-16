@@ -122,7 +122,7 @@ public class ProductsUI extends JFrame {
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				setVisible(false);
 			}
 		});
 		btnExit.setBounds(263, 228, 89, 23);
