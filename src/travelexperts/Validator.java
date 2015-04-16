@@ -1,6 +1,9 @@
 package travelexperts;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -95,4 +98,44 @@ public class Validator {
 		}
 		return true;
 	}
+	public static boolean validPostalCode(JTextField checkMe){
+		String regex = "^([A-Za-z].[0-9].){3}$"; //A1B2C3
+		String regex2 = "^[A-Za-z].[0-9].[A-Za-z].[ ].[0-9].[A-Za-z].[0-9].$"; //A1B 2C3
+		
+		Pattern pattern = Pattern.compile(regex);
+		Pattern pattern2= Pattern.compile(regex2);
+		
+		Matcher matcher = pattern.matcher((checkMe.getText()).trim());
+		Matcher matcher2 = pattern.matcher((checkMe.getText()).trim());
+		
+	    
+	    if(matcher.matches() || matcher2.matches()){
+	    	return true;
+	    }
+	    JOptionPane.showMessageDialog(null, 
+				"Error: Invalid PostalCode\n"
+				+ "Valid Formats are A1A1A1 or A1A 1A1", 
+				"Error", JOptionPane.ERROR_MESSAGE);
+		checkMe.requestFocus();
+	    return false;
+	}
+	public static boolean validPhoneNumber(JTextField checkMe){
+		String regex = "^[(].[0-9]{3}[)].[0-9]{3}[-].[0-9]{4}$"; //(403) 210-7833
+		Pattern pattern = Pattern.compile(regex);
+		
+		Matcher matcher = pattern.matcher((checkMe.getText()).trim());
+		
+	    
+	    if(matcher.matches()){
+	    	return true;
+	    }
+	    JOptionPane.showMessageDialog(null, 
+				"Error: Invalid Phone Number\n"
+				+ "Valid Format is (123)123-1234", 
+				"Error", JOptionPane.ERROR_MESSAGE);
+		checkMe.requestFocus();
+	    return false;
+	}
+	
+
 }

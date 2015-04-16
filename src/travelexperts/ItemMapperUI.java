@@ -55,7 +55,7 @@ public class ItemMapperUI extends JDialog{
 	public ItemMapperUI(boolean isForProducts, Item item) {
 		this.item=item;
 		this.isForProducts = isForProducts;
-		setItemName();
+		
 		setTitle("Travel Experts: Product and Supplier Maintenance");	
 		setAutoRequestFocus(false);
 		getContentPane().setLayout(null);
@@ -101,6 +101,7 @@ public class ItemMapperUI extends JDialog{
 		itemName.setBounds(288, 18, 214, 22);
 		getContentPane().add(itemName);
 		itemName.setColumns(10);
+		setItemName();
 		
 		btnAdd = new JButton("Add");
 		btnAdd.setBounds(307, 431, 97, 33);
