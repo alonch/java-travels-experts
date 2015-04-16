@@ -149,4 +149,34 @@ public class ProductModelDB implements ItemModel {
 			//link not successful
 		}
 	}
+	
+	public List<Supplier> getSuppliers(int productId){
+		ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from suppliers s, products_suppliers ps"
+					+ "where ps.ProductId="+productId+ " and "
+					+ " ps.SupplierId=s.SupplierId";
+			rs = stmt.executeQuery(sql);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int numCols = rsmd.getColumnCount();
+			
+			while (rs.next())
+			{
+				Supplier supplier = new Supplier();
+				
+				supplier.setId(rs.getInt("SupplierId"));
+				supplier.setName(rs.getString("SupName"));
+				
+				suppliers.add(supplier);
+			}
+			//conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return suppliers;
+	}
 }
