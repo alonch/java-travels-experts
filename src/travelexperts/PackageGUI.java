@@ -9,8 +9,12 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import javax.swing.JTextField;
 
@@ -22,16 +26,26 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.Color;
+
+import javax.swing.JFormattedTextField;
+import javax.swing.text.NumberFormatter;
 
 public class PackageGUI {
 
+	public static NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.CANADA);
+	public static NumberFormatter currencyF= new NumberFormatter(currency);
+	
 	private JFrame frame;
 	private JTextField tfName;
-	private JTextField tfBasePrice;
-	private JTextField tfAgencyCommission;
+	private JFormattedTextField tfBasePrice;
+	private JFormattedTextField tfAgencyCommission;
 	private JLabel lblId;
 	private JDateChooser dcStartDate;
 	private JDateChooser dcEndDate;
@@ -41,7 +55,7 @@ public class PackageGUI {
 	private JList<ProductSupplierLink> listIncludedProducts;
 	private DefaultListModel<ProductSupplierLink> modelIncluded;
 	private DefaultListModel<ProductSupplierLink> modelNotIncluded;
-	
+				
 	private Package pkg;
 	private PackageModelDB pkgdb = new PackageModelDB();
 	private ArrayList<Package> pkgs;
@@ -49,6 +63,12 @@ public class PackageGUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		currencyF.setMinimum(0.00);
+		currencyF.setMaximum(10000000.0);
+		//currencyF.setAllowsInvalid(false);
+		//currencyF.setOverwriteMode(true);
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -83,7 +103,7 @@ public class PackageGUI {
 		
 		lblId = new JLabel("");
 		lblId.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblId.setBounds(12, 93, 73, 33);
+		lblId.setBounds(55, 91, 73, 33);
 		frame.getContentPane().add(lblId);
 		
 		JLabel lblNewLabel = new JLabel("Name:");
@@ -116,23 +136,63 @@ public class PackageGUI {
 		tfName.setColumns(10);
 		
 		dcStartDate = new JDateChooser();
+		dcStartDate.setForeground(Color.BLACK);
+		dcStartDate.getDateEditor().setEnabled(false);
+		dcStartDate.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				dcEndDate.getJCalendar().setMinSelectableDate(dcStartDate.getDate());
+			}
+		});
 		dcStartDate.setBounds(152, 183, 154, 22);
 		frame.getContentPane().add(dcStartDate);
 		
 		dcEndDate = new JDateChooser();
+		dcEndDate.setForeground(Color.BLACK);
+		dcEndDate.getDateEditor().setEnabled(false);
 		dcEndDate.setBounds(152, 221, 154, 22);
 		frame.getContentPane().add(dcEndDate);
-		
 		taDescription = new JTextArea();
 		taDescription.setBounds(152, 263, 521, 40);
 		frame.getContentPane().add(taDescription);
 		
-		tfBasePrice = new JTextField();
+		tfBasePrice = new JFormattedTextField(currencyF);
+		tfBasePrice.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				try{
+					tfBasePrice.setValue(Double.parseDouble(tfBasePrice.getText()));
+				}catch(Exception ex){
+					ex.printStackTrace();
+					tfBasePrice.setValue(0);
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				tfBasePrice.setText(""+tfBasePrice.getValue());
+			}
+		});
 		tfBasePrice.setBounds(557, 150, 116, 22);
 		frame.getContentPane().add(tfBasePrice);
 		tfBasePrice.setColumns(10);
 		
-		tfAgencyCommission = new JTextField();
+		tfAgencyCommission = new JFormattedTextField(currencyF);
+		tfAgencyCommission.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				tfAgencyCommission.setText(""+tfAgencyCommission.getValue());
+			}
+			@Override
+			
+			public void focusLost(FocusEvent e) {
+				
+				try{
+					tfAgencyCommission.setValue(Double.parseDouble(tfAgencyCommission.getText()));
+				}catch(Exception ex){
+					ex.printStackTrace();
+					tfAgencyCommission.setValue(0);
+				}
+			}
+		});
 		tfAgencyCommission.setColumns(10);
 		tfAgencyCommission.setBounds(557, 186, 116, 22);
 		frame.getContentPane().add(tfAgencyCommission);
@@ -149,36 +209,90 @@ public class PackageGUI {
 		lblProductsNotIncluded.setBounds(354, 345, 186, 33);
 		frame.getContentPane().add(lblProductsNotIncluded);
 		
-		JLabel lblClickAProduct = new JLabel("click a product to remove");
+		JLabel lblClickAProduct = new JLabel("double-click a product to remove");
 		lblClickAProduct.setBounds(31, 375, 171, 16);
 		frame.getContentPane().add(lblClickAProduct);
 		
-		JLabel lblClickAProduct_1 = new JLabel("click a product to add");
+		JLabel lblClickAProduct_1 = new JLabel("double-click a product to add");
 		lblClickAProduct_1.setBounds(354, 375, 171, 16);
 		frame.getContentPane().add(lblClickAProduct_1);
 		
 		modelNotIncluded = new DefaultListModel<ProductSupplierLink>();
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+			}
+		});
 		btnExit.setBounds(574, 707, 99, 25);
 		frame.getContentPane().add(btnExit);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+								
+				if(Validator.notEmpty(tfName) &&
+						Validator.validDate(dcStartDate) &&
+						Validator.validDate(dcEndDate) &&
+						Validator.dateInRange(dcEndDate, dcStartDate) &&
+						Validator.notEmpty(taDescription) &&
+						Validator.numberIsDouble(tfBasePrice) &&
+						Validator.doubleIsLessthan(tfBasePrice, 0, 99999999) &&
+						Validator.numberIsDouble(tfAgencyCommission) &&
+						Validator.doubleIsLessthan(tfAgencyCommission, 0, Double.parseDouble(tfBasePrice.getValue().toString()))){
+					//valid user input
+					
+					pkg.setName(tfName.getText());
+					pkg.setStartDate(dcStartDate.getDate());
+					pkg.setEndDate(dcEndDate.getDate());
+					pkg.setDescription(taDescription.getText());
+					pkg.setBasePrice(Double.parseDouble(tfBasePrice.getValue().toString()));
+					pkg.setAgencyCommission(Double.parseDouble(tfAgencyCommission.getValue().toString()));
+					
+					if(pkg.getId() == 0){
+						//new package
+						pkgdb.add(pkg);
+					}else{
+						//update existing package
+						pkgdb.save(pkg);
+					}
+					getPackages();
+					try {
+						populateForm(pkg);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else{
+					//invalid user input
+				}
+			}
+		});
 		btnSave.setBounds(459, 707, 99, 25);
 		frame.getContentPane().add(btnSave);
 		
 		cbPackages = new JComboBox<Package>();
 		cbPackages.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				populateForm();
+				
+				try {
+					if(cbPackages.getItemCount() > 0){
+						populateForm((Package) cbPackages.getSelectedItem());
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		cbPackages.setBounds(12, 44, 207, 24);
 		
 		getPackages();
-		for(Package p:pkgs){
-			cbPackages.addItem(p);
-		}
 		
 		frame.getContentPane().add(cbPackages);
 		
@@ -226,22 +340,53 @@ public class PackageGUI {
 			}
 		});
 		scrollPane_1.setViewportView(listNotIncludedProducts);
+		
+		JButton btnNewPackage = new JButton("New Package");
+		btnNewPackage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					populateForm(new Package());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnNewPackage.setBounds(322, 707, 125, 25);
+		frame.getContentPane().add(btnNewPackage);
+		
+		JLabel lblId_1 = new JLabel("ID:");
+		lblId_1.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblId_1.setBounds(12, 91, 62, 33);
+		frame.getContentPane().add(lblId_1);
 	}
 	
 	private void getPackages(){
 		pkgs = (ArrayList<Package>) pkgdb.get();
+		cbPackages.removeAllItems();
+		for(Package p:pkgs){
+			cbPackages.addItem(p);
+		}
 	}
 
-	private void populateForm() {
-		pkg = (Package) cbPackages.getSelectedItem();
+	private void populateForm(Package p) throws ParseException, Exception {
+		pkg = p;
 		
 		lblId.setText(""+pkg.getId());
 		tfName.setText(pkg.getName());
-		dcStartDate.setDate(pkg.getStartDate());
-		dcEndDate.setDate(pkg.getEndDate());
+		System.out.println(pkg.getStartDate());
+		dcStartDate.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(pkg.getStartDate()));
+		System.out.println(dcStartDate.getDate());
+		dcEndDate.getJCalendar().setMinSelectableDate(dcStartDate.getDate());
+		dcEndDate.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(pkg.getEndDate()));
 		taDescription.setText(pkg.getDescription());
-		tfBasePrice.setText(""+pkg.getBasePrice());
-		tfAgencyCommission.setText(""+pkg.getAgencyCommission());
+		//tfBasePrice.setText(""+pkg.getBasePrice());
+		tfBasePrice.setValue(pkg.getBasePrice());
+		//tfAgencyCommission.setText(""+pkg.getAgencyCommission());
+		tfAgencyCommission.setValue(pkg.getAgencyCommission());
 		
 		getAllIncludedPS();
 		getAllNotIncludedPS();

@@ -1,13 +1,14 @@
 package travelexperts;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class Package {
-	private int Id;
+	private int Id=0;
 	private String name;
-	private Date startDate;
-	private Date endDate;
+	private String startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	private String endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	private String description;
 	private double basePrice;
 	private double agencyCommission;
@@ -25,17 +26,17 @@ public class Package {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+		this.startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startDate);
 	}
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+		this.endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate);
 	}
 	public String getDescription() {
 		return description;
