@@ -225,7 +225,7 @@ public class GUIAgentsTx extends JFrame {
 							btnSave.setEnabled(false);
 							btnUpdate.setEnabled(true);	
 							btnAdd.setEnabled(true);
-							//GUIAgentsTx.this.updateAgent();
+							
 							agent=new Agent();
 							agent.setId(Integer.parseInt(txtAgentId.getText()));
 							agent.setFirstName(txtFirst.getText());
@@ -234,7 +234,6 @@ public class GUIAgentsTx extends JFrame {
 							agent.setBusPhone(txtBusPhone.getText());
 							agent.setEmail(txtEmail.getText());							
 							agent.setPosition(txtPosition.getText());
-							//agent.setAgencyId(Integer.parseInt((String) cbAgent.getSelectedItem()));
 							agentdb.save(agent);
 						}
 					});					
@@ -250,7 +249,7 @@ public class GUIAgentsTx extends JFrame {
 							btnUpdate.setEnabled(true);	
 							btnSave.setEnabled(true);
 								try {																																	
-									txtAgentId.setText(""); //should be based on selected current value. NEED TO FIX
+									txtAgentId.setText(""+agent.getId()); 
 									txtFirst.setText("");
 									txtMidInit.setText("");
 									txtLast.setText("");
@@ -259,8 +258,8 @@ public class GUIAgentsTx extends JFrame {
 									txtPosition.setText("");	
 									txtAgencyId.setText("");								
 																
-									txtFirst.requestFocusInWindow(); //focus set on txtFirst
-									txtAgentId.setEnabled(true);
+									txtFirst.requestFocusInWindow(); 
+									txtAgentId.setEnabled(false);
 									txtFirst.setEnabled(true);
 									txtMidInit.setEnabled(true);
 									txtLast.setEnabled(true);
