@@ -108,17 +108,17 @@ public class ItemsUI extends JFrame {
 					ProductModelDB productdb = new ProductModelDB();
 					item = (Product) productdb.get(id);
 					//item = items.get(rowIndex);
-					itemMapperUI = new ItemMapperUI(item);
+					itemMapperUI = new ItemMapperUI(isForProducts, item);
 					itemMapperUI.setLabelsToProducts();
 				} else {
 					SupplierModelDB supplierdb = new SupplierModelDB();
 					item = (Supplier) supplierdb.get(id);
-					itemMapperUI = new ItemMapperUI(item);
+					itemMapperUI = new ItemMapperUI(isForProducts, item);
 					itemMapperUI.setLabelsToSuppliers();
 				}
 
-				itemMapperUI.setItem(item);
-				// itemMapperUI.setItemsIn(p);
+				//itemMapperUI.setItem(item);
+				//itemMapperUI.setItemsIn(p);
 
 				itemMapperUI.setModal(true);
 				itemMapperUI.setVisible(true);

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+//import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 //import java.sql.Statement;
@@ -174,11 +174,39 @@ public class SupplierModelDB implements ItemModel {
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from products p, products_suppliers ps"
+			String sql = "select * from products p, products_suppliers ps "
 					+ "where ps.ProductId=p.ProductId and "
 					+ " ps.SupplierId="+supplierId;
 			rs = stmt.executeQuery(sql);
-			ResultSetMetaData rsmd = rs.getMetaData();
+			//ResultSetMetaData rsmd = rs.getMetaData();
+			
+			while (rs.next())
+			{
+				Product product= new Product();
+				
+				product.setId(rs.getInt("ProductId"));
+				product.setName(rs.getString("ProdId"));
+				
+				products.add(product);
+			}
+			//conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return products;
+	}
+	public List<Product> getProductsNotLinked(int supplierId){
+		ArrayList<Product> products = new ArrayList<Product>();
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from products p, products_suppliers ps "
+					+ "where ps.ProductId=p.ProductId and "
+					+ " ps.SupplierId<>"+supplierId;
+			rs = stmt.executeQuery(sql);
+			//ResultSetMetaData rsmd = rs.getMetaData();
 			
 			while (rs.next())
 			{

@@ -156,12 +156,44 @@ public class ProductModelDB implements ItemModel {
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from suppliers s, products_suppliers ps"
+			String sql = "select * from suppliers s, products_suppliers ps "
 					+ "where ps.ProductId="+productId+ " and "
-					+ " ps.SupplierId=s.SupplierId";
+					+ " ps.SupplierId=s.SupplierId "
+					+ "order by s.SupName";
 			rs = stmt.executeQuery(sql);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int numCols = rsmd.getColumnCount();
+			//ResultSetMetaData rsmd = rs.getMetaData();
+			//int numCols = rsmd.getColumnCount();
+			
+			while (rs.next())
+			{
+				Supplier supplier = new Supplier();
+				
+				supplier.setId(rs.getInt("SupplierId"));
+				supplier.setName(rs.getString("SupName"));
+				
+				suppliers.add(supplier);
+			}
+			//conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return suppliers;
+	}
+	public List<Supplier> getSuppliersNotLinked(int productId){
+		ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
+		
+		try {
+			conn = TravelExpertsDB.GetConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from suppliers s, products_suppliers ps "
+					+ "where ps.ProductId<>"+productId+ " and "
+					+ " ps.SupplierId=s.SupplierId "
+					+ "order by s.SupName";
+			
+			rs = stmt.executeQuery(sql);
+			//ResultSetMetaData rsmd = rs.getMetaData();
+			//int numCols = rsmd.getColumnCount();
 			
 			while (rs.next())
 			{
