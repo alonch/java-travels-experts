@@ -64,4 +64,7 @@ public class Customer extends Person{
 	public void setAgentId(int agentId) {
 		this.agentId = agentId;
 	}
+	public String toString(){
+		return super.getFirstName()+" "+super.getLastName();
+	}
 }
