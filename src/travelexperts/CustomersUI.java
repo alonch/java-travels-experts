@@ -71,6 +71,7 @@ public class CustomersUI extends JFrame {
 	 * Create the frame.
 	 */
 	public CustomersUI(Agent agent) {
+		deletedAgent=agent;
 		setType(Type.UTILITY);
 		setTitle("Travel Experts - Customers");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,7 +97,7 @@ public class CustomersUI extends JFrame {
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				setVisible(false);
 			}
 		});
 		btnExit.setBounds(636, 232, 89, 23);
@@ -109,7 +110,8 @@ public class CustomersUI extends JFrame {
 					customers.get(i).setAgentId(getAgentIdByName(tblCustomers.getValueAt(i, 3).toString()));
 					customerDB.save(customers.get(i));
 				}
-				JOptionPane.showMessageDialog(null, "Saved successfully.");				
+				JOptionPane.showMessageDialog(null, "Saved successfully.");		
+				setVisible(false);
 			}
 		});
 		btnSave.setBounds(10, 232, 89, 23);

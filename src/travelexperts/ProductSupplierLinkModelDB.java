@@ -19,8 +19,8 @@ public class ProductSupplierLinkModelDB implements ProductSupplierLinkModel{
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String strSQL = "Insert Into products_suppliers Values("
-					+ null +","+productId+","+supplierId;
+			String strSQL = "Insert Into products_suppliers Values(null ,"
+					+productId+","+supplierId+")";
 
 			if (stmt.executeUpdate(strSQL) == 0)
 			{

@@ -186,10 +186,11 @@ public class ProductModelDB implements ItemModel {
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from suppliers s, products_suppliers ps "
-					+ "where ps.ProductId<>"+productId+ " and "
-					+ " ps.SupplierId=s.SupplierId "
-					+ "order by s.SupName";
+			String notIn = "select s.SupplierId from suppliers s, products_suppliers ps "
+					+ "where ps.ProductId="+productId+ " and "
+					+ " ps.SupplierId=s.SupplierId ";
+			
+			String sql = "select * from suppliers s where supplierId not in (" + notIn + ") order by s.supname"; 
 			
 			rs = stmt.executeQuery(sql);
 			//ResultSetMetaData rsmd = rs.getMetaData();

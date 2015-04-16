@@ -56,6 +56,7 @@ public class GUIAgentsTx extends JFrame {
 		private JButton btnUpdate;
 		private JButton btnSave;
 		private JButton btnAdd;
+		private JButton btnDelete;
 		
 		AgentModelDB agentdb = new AgentModelDB();
 		private Agent agent;
@@ -70,7 +71,7 @@ public class GUIAgentsTx extends JFrame {
 	//@SuppressWarnings("unchecked")
 	public GUIAgentsTx() {
 		setTitle("Travel Experts: Agents");		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);	
 		getContentPane().setLayout(null);	
 		
 		agents = (ArrayList<Agent>) agentdb.get();
@@ -90,6 +91,7 @@ public class GUIAgentsTx extends JFrame {
 				public void actionPerformed(ActionEvent e)
 				{
 					agent = (Agent) cbAgent.getSelectedItem();
+					System.out.println(agent);
 					agency = (Agency) agencydb.get(agent.getAgencyId());
 					
 					txtAgentId.setText(""+agent.getId());
@@ -102,6 +104,7 @@ public class GUIAgentsTx extends JFrame {
 					cbAgency.setSelectedItem(agency);
 				}
 			});				
+			txtAgentId.setEditable(false);
 			txtAgentId.setBounds(145, 42,150, 21);
 			getContentPane().add(txtAgentId);
 			txtAgentId.setEnabled(false);
@@ -190,7 +193,7 @@ public class GUIAgentsTx extends JFrame {
 			}
 			{				
 				getContentPane().add(lblAgencyId);			
-				lblAgencyId.setText("Agency ID:");				
+				lblAgencyId.setText("Agency:");				
 				lblAgencyId.setBounds(25, 255, 110, 14);									
 				{
 					btnUpdate = new JButton();
@@ -208,7 +211,7 @@ public class GUIAgentsTx extends JFrame {
 							txtLast.setEnabled(true);
 							txtBusPhone.setEnabled(true);
 							txtEmail.setEnabled(true);
-							txtPosition.setEnabled(true);
+							txtPosition.setEnabled(false);
 							txtAgencyId.setEnabled(true);
 							btnSave.setEnabled(true);		
 							btnAdd.setEnabled(true);
@@ -217,7 +220,7 @@ public class GUIAgentsTx extends JFrame {
 					btnSave = new JButton();
 					getContentPane().add(btnSave);
 					btnSave.setText("Save");
-					btnSave.setBounds(359, 128, 80, 21);			
+					btnSave.setBounds(359, 87, 80, 21);			
 					btnSave.addMouseListener(new MouseAdapter()
 					{
 						public void mouseClicked(MouseEvent e)
@@ -225,22 +228,31 @@ public class GUIAgentsTx extends JFrame {
 							btnSave.setEnabled(false);
 							btnUpdate.setEnabled(true);	
 							btnAdd.setEnabled(true);
+							//validate data
 							
-							agent=new Agent();
-							agent.setId(Integer.parseInt(txtAgentId.getText()));
-							agent.setFirstName(txtFirst.getText());
-							agent.setMiddleInitial(txtMidInit.getText());
-							agent.setLastName(txtLast.getText());
-							agent.setBusPhone(txtBusPhone.getText());
-							agent.setEmail(txtEmail.getText());							
-							agent.setPosition(txtPosition.getText());
-							agentdb.save(agent);
+							if (Validator.notEmpty(txtFirst) && 
+									Validator.notEmpty(txtMidInit) &&
+									Validator.notEmpty(txtLast) &&									
+									Validator.notEmpty(txtBusPhone) &&
+									Validator.notEmpty(txtEmail) &&
+									Validator.notEmpty(txtPosition) &&
+									Validator.notEmpty(txtEmail)){
+								agent=new Agent();
+								agent.setId(Integer.parseInt(txtAgentId.getText()));
+								agent.setFirstName(txtFirst.getText());
+								agent.setMiddleInitial(txtMidInit.getText());
+								agent.setLastName(txtLast.getText());
+								agent.setBusPhone(txtBusPhone.getText());
+								agent.setEmail(txtEmail.getText());							
+								agent.setPosition(txtPosition.getText());
+								agentdb.save(agent);
+							}
 						}
 					});					
 					btnAdd = new JButton();
 					getContentPane().add(btnAdd);
 					btnAdd.setText("Add");
-					btnAdd.setBounds(359, 218, 80, 21);			
+					btnAdd.setBounds(359, 156, 80, 21);			
 					btnAdd.addMouseListener(new MouseAdapter()
 					{
 						public void mouseClicked(MouseEvent e)
@@ -273,6 +285,30 @@ public class GUIAgentsTx extends JFrame {
 								}
 						}
 					});
+					btnDelete = new JButton("Delete");
+					btnDelete.setBounds(359, 222, 80, 24);
+					getContentPane().add(btnDelete);
+					btnDelete.addMouseListener(new MouseAdapter()
+					{
+						public void mouseClicked(MouseEvent e)
+						{
+							btnAdd.setEnabled(true);
+							btnUpdate.setEnabled(true);	
+							btnSave.setEnabled(true);
+							btnDelete.setEnabled(false);
+							try {
+							//delete the agent
+							agentdb.delete(agent.getId());
+								
+							//open table of customers assigned to that agent
+							new CustomersUI(agent).setVisible(true);;
+								
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				}
+			});
 				}
 		}		
 			setSize(550, 339);
@@ -294,6 +330,5 @@ public class GUIAgentsTx extends JFrame {
 			}
 		});
 	}//end main	
-	
 }//end class
 

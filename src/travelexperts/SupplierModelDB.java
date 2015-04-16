@@ -21,8 +21,20 @@ public class SupplierModelDB implements ItemModel {
 	
 	@Override
 	public void add(Item product) {
-		// TODO Auto-generated method stub
-		
+		connect();
+		try {
+			PreparedStatement ps = conn.prepareStatement("insert into suppliers(supplierid, supname) values (null, ?)");
+			ps.setString(1, product.getName());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
@@ -83,10 +95,7 @@ public class SupplierModelDB implements ItemModel {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		}
-		
-		
-		
+		}		
 	}
 	
 	public void connect()
@@ -185,7 +194,7 @@ public class SupplierModelDB implements ItemModel {
 				Product product= new Product();
 				
 				product.setId(rs.getInt("ProductId"));
-				product.setName(rs.getString("ProdId"));
+				product.setName(rs.getString("ProdName"));
 				
 				products.add(product);
 			}
@@ -202,9 +211,13 @@ public class SupplierModelDB implements ItemModel {
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from products p, products_suppliers ps "
+			
+			String notIn = "select p.productid from products p, products_suppliers ps "
 					+ "where ps.ProductId=p.ProductId and "
-					+ " ps.SupplierId<>"+supplierId;
+					+ " ps.SupplierId="+supplierId;
+			
+			String sql = "select * from products where productId not in (" + notIn + ") order by prodname"; 
+			
 			rs = stmt.executeQuery(sql);
 			//ResultSetMetaData rsmd = rs.getMetaData();
 			
@@ -213,7 +226,7 @@ public class SupplierModelDB implements ItemModel {
 				Product product= new Product();
 				
 				product.setId(rs.getInt("ProductId"));
-				product.setName(rs.getString("ProdId"));
+				product.setName(rs.getString("ProdName"));
 				
 				products.add(product);
 			}

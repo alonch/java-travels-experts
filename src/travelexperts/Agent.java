@@ -1,5 +1,6 @@
 package travelexperts;
 
+
 public class Agent extends Person{
 	//private int Id;
 	//private String firstName;
@@ -20,7 +21,7 @@ public class Agent extends Person{
 		this.deleted = deleted;
 	}
 	public String getMiddleInitial() {
-		return (middleInitial==null) ? "" : middleInitial;
+		return middleInitial;
 	}
 	public void setMiddleInitial(String middleInitial) {
 		this.middleInitial = middleInitial;
@@ -50,6 +51,6 @@ public class Agent extends Person{
 		this.password = password;
 	}
 	public String toString(){
-		return super.getFirstName() + " " + getMiddleInitial() + " " + super.getLastName();
+		return super.getFirstName()+" "+super.getLastName();
 	}
 }
