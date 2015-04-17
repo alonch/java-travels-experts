@@ -21,17 +21,10 @@ public class SupplierModelDB implements ItemModel {
 	
 	@Override
 	public void add(Item product) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void save(Item supplier) {
 		connect();
 		try {
-			PreparedStatement ps = conn.prepareStatement("insert into suppliers(supplierid, supname) values (?, ?)");
-			ps.setInt(1, supplier.getId());
-			ps.setString(2, supplier.getName());
+			PreparedStatement ps = conn.prepareStatement("insert into suppliers(supplierid, supname) values (null, ?)");
+			ps.setString(1, product.getName());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -42,6 +35,26 @@ public class SupplierModelDB implements ItemModel {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@Override
+	public void save(Item supplier) {
+		try
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update suppliers set SupName ='"+supplier.getName()+"' where SupplierId ="+supplier.getId();
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			//preparedStmt.setString(1, supplier.getName());	      
+			//preparedStmt.setInt   (2, supplier.getId());	   
+			preparedStmt.executeUpdate();
+	       
+			conn.close();
+	    }
+	    catch (Exception e)
+	    {
+	      System.err.println("Got an exception! ");
+	      System.err.println(e.getMessage());
+	    }
 	}
 
 	@Override
@@ -83,10 +96,7 @@ public class SupplierModelDB implements ItemModel {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		}
-		
-		
-		
+		}		
 	}
 	
 	public void connect()
@@ -185,7 +195,7 @@ public class SupplierModelDB implements ItemModel {
 				Product product= new Product();
 				
 				product.setId(rs.getInt("ProductId"));
-				product.setName(rs.getString("ProdId"));
+				product.setName(rs.getString("ProdName"));
 				
 				products.add(product);
 			}
@@ -202,9 +212,13 @@ public class SupplierModelDB implements ItemModel {
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from products p, products_suppliers ps "
+			
+			String notIn = "select p.productid from products p, products_suppliers ps "
 					+ "where ps.ProductId=p.ProductId and "
-					+ " ps.SupplierId<>"+supplierId;
+					+ " ps.SupplierId="+supplierId;
+			
+			String sql = "select * from products where productId not in (" + notIn + ") order by prodname"; 
+			
 			rs = stmt.executeQuery(sql);
 			//ResultSetMetaData rsmd = rs.getMetaData();
 			
@@ -213,7 +227,7 @@ public class SupplierModelDB implements ItemModel {
 				Product product= new Product();
 				
 				product.setId(rs.getInt("ProductId"));
-				product.setName(rs.getString("ProdId"));
+				product.setName(rs.getString("ProdName"));
 				
 				products.add(product);
 			}

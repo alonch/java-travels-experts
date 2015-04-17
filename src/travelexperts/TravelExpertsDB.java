@@ -12,8 +12,7 @@ public class TravelExpertsDB {
         if (instance == null || instance.isClosed()){
         	instance = GET_INSTANCE();
         }
-    }catch(Exception e){
-    	e.printStackTrace();
+    }catch(Exception ex){
     }
         return instance;
     }

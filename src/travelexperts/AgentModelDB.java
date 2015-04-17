@@ -102,7 +102,7 @@ public class AgentModelDB implements AgentModel{
 		try {
 			conn = TravelExpertsDB.GetConnection();
 			stmt = conn.createStatement();
-			String sql = "select * from agents";
+			String sql = "select * from agents where deleted=0";
 			rs = stmt.executeQuery(sql);
 			agents = new ArrayList<Agent>();
 			while (rs.next())

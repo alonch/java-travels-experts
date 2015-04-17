@@ -44,7 +44,7 @@ public class ItemsUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					boolean isForProducts = true;
+					boolean isForProducts = false;
 					ItemsUI frame;
 					frame = new ItemsUI(isForProducts);
 					frame.setVisible(true);
@@ -63,7 +63,7 @@ public class ItemsUI extends JFrame {
 		setType(Type.UTILITY);
 		setResizable(false);
 		setTitle("Travel Experts - Items UI");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 368, 288);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -99,27 +99,14 @@ public class ItemsUI extends JFrame {
 				Item item;
 				ItemMapperUI itemMapperUI;
 				int id = items.get(rowIndex).getId();
+				item = model.get(id);
+				itemMapperUI = new ItemMapperUI(isForProducts, item);
 				
-				if (isForProducts) {
-					
-			         //int colIndex = 0;
-			         //int id = (int) tblItems.getValueAt( rowIndex, colIndex );
-			         //String s=(String) table.getValueAt(rowIndex,colIndex);
-					ProductModelDB productdb = new ProductModelDB();
-					item = (Product) productdb.get(id);
-					//item = items.get(rowIndex);
-					itemMapperUI = new ItemMapperUI(isForProducts, item);
-					itemMapperUI.setLabelsToProducts();
-				} else {
-					SupplierModelDB supplierdb = new SupplierModelDB();
-					item = (Supplier) supplierdb.get(id);
-					itemMapperUI = new ItemMapperUI(isForProducts, item);
+				if (isForProducts) {		        
 					itemMapperUI.setLabelsToSuppliers();
+				} else {
+					itemMapperUI.setLabelsToProducts();
 				}
-
-				//itemMapperUI.setItem(item);
-				//itemMapperUI.setItemsIn(p);
-
 				itemMapperUI.setModal(true);
 				itemMapperUI.setVisible(true);
 			}
@@ -127,8 +114,8 @@ public class ItemsUI extends JFrame {
 		btnEdit.setBounds(263, 45, 89, 23);
 		contentPane.add(btnEdit);
 
-		btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(new ActionListener() {
+		//btnDelete = new JButton("Delete");
+		/*btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int rowIndex = tblItems.getSelectedRow();
 				if (rowIndex == -1) {
@@ -147,12 +134,13 @@ public class ItemsUI extends JFrame {
 			}
 		});
 		btnDelete.setBounds(263, 79, 89, 23);
-		contentPane.add(btnDelete);
+		contentPane.add(btnDelete);*/
 
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				//System.exit(0);
+				setVisible(false);
 			}
 		});
 		btnExit.setBounds(263, 228, 89, 23);

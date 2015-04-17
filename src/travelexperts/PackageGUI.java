@@ -42,7 +42,7 @@ public class PackageGUI {
 	public static NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.CANADA);
 	public static NumberFormatter currencyF= new NumberFormatter(currency);
 	
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField tfName;
 	private JFormattedTextField tfBasePrice;
 	private JFormattedTextField tfAgencyCommission;
@@ -94,7 +94,7 @@ public class PackageGUI {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 701, 777);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 				
 		JLabel lblSelectAPackage = new JLabel("Select a Package");

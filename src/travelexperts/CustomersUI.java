@@ -6,8 +6,11 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -20,6 +23,12 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -33,19 +42,23 @@ public class CustomersUI extends JFrame {
 	private DefaultTableModel dtm;
 	private List<Customer> customers;
 	private List<Agent> agents;
-	private CustomerModelDB customerDB;
-	private AgentModelDB agentDB;
+	private CustomerModelDB customerDB = new CustomerModelDB();
+	private static AgentModelDB agentDB= new AgentModelDB();
 	private JComboBox<String> cmbAgents;
 	private DefaultComboBoxModel<String> cmbModel;
+	static Agent deletedAgent;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		deletedAgent = agentDB.get(1);
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CustomersUI frame = new CustomersUI();
+					CustomersUI frame = new CustomersUI(deletedAgent);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +70,8 @@ public class CustomersUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CustomersUI() {
+	public CustomersUI(Agent agent) {
+		deletedAgent=agent;
 		setType(Type.UTILITY);
 		setTitle("Travel Experts - Customers");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,22 +97,35 @@ public class CustomersUI extends JFrame {
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				setVisible(false);
 			}
 		});
 		btnExit.setBounds(636, 232, 89, 23);
 		contentPane.add(btnExit);
+		
+		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int i=0; i < tblCustomers.getRowCount(); i++) {
+					customers.get(i).setAgentId(getAgentIdByName(tblCustomers.getValueAt(i, 3).toString()));
+					customerDB.save(customers.get(i));
+				}
+				JOptionPane.showMessageDialog(null, "Saved successfully.");		
+				setVisible(false);
+			}
+		});
+		btnSave.setBounds(10, 232, 89, 23);
+		contentPane.add(btnSave);
 	}
 	
 	private void init() {		
-		customerDB = new CustomerModelDB();
-		customers = customerDB.get();
-		agentDB = new AgentModelDB();
+		//customers = customerDB.get();
+		customers = customerDB.get(deletedAgent.getId());
 		agents = agentDB.get();
 		cmbModel = new DefaultComboBoxModel<String>(populateComboBoxItems(agents)); 
-		//cmbAgents = new JComboBox<String>(populateComboBoxItems(agents));
 		cmbAgents = new JComboBox<String>();
-		cmbAgents.setModel(cmbModel);		
+		cmbAgents.setModel(cmbModel);
+		
 		setDTM();
 		populateDTM();
 	}
@@ -132,6 +159,17 @@ public class CustomersUI extends JFrame {
 		for (int i=0; i < agentList.size(); i++)
 			items.add(agentList.get(i).toString());
 		return items;
+	}
+	
+	private int getAgentIdByName(String name) {
+		int ix = -1;
+		for (int i=0; i < agents.size(); i++) {
+			if (agents.get(i).toString().equals(name)) {
+				ix = agents.get(i).getId();				
+				break;
+			}
+		}
+		return ix;
 	}
 }
 //JOptionPane.showMessageDialog(null, item, "Summary", JOptionPane.INFORMATION_MESSAGE);
