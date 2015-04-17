@@ -20,7 +20,11 @@ public class CustomerModelDB implements CustomerModel {
             conn = TravelExpertsDB.GetConnection();
             String query = "update customers "
                     + "set AgentId = " + customer.getAgentId()
-                    + " where CustomerId = " + customer.getId();
+                    + " , CustFirstName = '" + customer.getFirstName()
+                    + "' , CustLastName = '" + customer.getLastName()
+                    + "' , CustHomePhone = '" + customer.getHomePhone()
+                    + "' , CustEmail = '" + customer.getEmail()
+                    + "' where CustomerId = " + customer.getId();
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.executeUpdate();
 
