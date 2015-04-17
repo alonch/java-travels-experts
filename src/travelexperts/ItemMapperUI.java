@@ -26,6 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 
 
@@ -147,22 +149,50 @@ public class ItemMapperUI extends JDialog{
 		getContentPane().add(itemsNotIn);	
 		
 		btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ItemMapperUI.this.dispose();
+			}
+		});
 		btnSave.setBounds(514, 431, 97, 33);
 		getContentPane().add(btnSave);
 		
-		btnCancel = new JButton("Cancel");
+		/*btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnCancel.setBounds(107, 431, 97, 33);
-		getContentPane().add(btnCancel);
+		getContentPane().add(btnCancel);*/
 		
 		itemName = new JTextField();
+		itemName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				item.setName(itemName.getText());
+				if(isForProducts){
+					
+					productdb.save(item);
+					
+				}else{
+					supplierdb.save(item);
+					System.out.println(item);
+					System.out.println("saved supplier");
+				}
+			}
+		});
 		itemName.setBounds(288, 18, 214, 22);
 		getContentPane().add(itemName);
 		itemName.setColumns(10);
 		setItemName();
 		
-		btnAdd = new JButton("Add");
+		/*btnAdd = new JButton("Add");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnAdd.setBounds(307, 431, 97, 33);
-		getContentPane().add(btnAdd);
+		getContentPane().add(btnAdd);*/
 		
 		lblItem = new JLabel("Item Name: ");
 		lblItem.setFont(new Font("Tahoma", Font.PLAIN, 15));

@@ -114,8 +114,8 @@ public class ItemsUI extends JFrame {
 		btnEdit.setBounds(263, 45, 89, 23);
 		contentPane.add(btnEdit);
 
-		btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(new ActionListener() {
+		//btnDelete = new JButton("Delete");
+		/*btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int rowIndex = tblItems.getSelectedRow();
 				if (rowIndex == -1) {
@@ -134,7 +134,7 @@ public class ItemsUI extends JFrame {
 			}
 		});
 		btnDelete.setBounds(263, 79, 89, 23);
-		contentPane.add(btnDelete);
+		contentPane.add(btnDelete);*/
 
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {

@@ -39,21 +39,22 @@ public class SupplierModelDB implements ItemModel {
 	
 	@Override
 	public void save(Item supplier) {
-		connect();
-		try {
-			PreparedStatement ps = conn.prepareStatement("insert into suppliers(supplierid, supname) values (?, ?)");
-			ps.setInt(1, supplier.getId());
-			ps.setString(2, supplier.getName());
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		try
+	    {
+			conn = TravelExpertsDB.GetConnection();
+			String query = "update suppliers set SupName ='"+supplier.getName()+"' where SupplierId ="+supplier.getId();
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			//preparedStmt.setString(1, supplier.getName());	      
+			//preparedStmt.setInt   (2, supplier.getId());	   
+			preparedStmt.executeUpdate();
+	       
+			conn.close();
+	    }
+	    catch (Exception e)
+	    {
+	      System.err.println("Got an exception! ");
+	      System.err.println(e.getMessage());
+	    }
 	}
 
 	@Override
