@@ -15,6 +15,17 @@ public class Customer extends Person{
 	//private String busPhone;
 	//private String email;
 	private int agentId;
+        private String userid;
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+        
+        
 	
 	public String getMiddleInitial() {
 		return middleInitial;

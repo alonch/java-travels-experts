@@ -103,4 +103,34 @@ public class CustomerModelDB implements CustomerModel {
 
         return customers;
     }
+
+    public Customer getByUserIdAndPassword(String userId, String password) throws Exception {
+        try {
+            conn = TravelExpertsDB.GetConnection();
+            stmt = conn.createStatement();
+            String sql = "select * from customers where userid='" + userId + "' and password=password('" + password + "');";
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("CustomerId"));
+                customer.setFirstName(rs.getString("CustFirstName"));
+                customer.setLastName(rs.getString("CustLastName"));
+                customer.setAddress(rs.getString("CustAddress"));
+                customer.setCity(rs.getString("CustCity"));
+                customer.setProvince(rs.getString("CustProv"));
+                customer.setPostal(rs.getString("CustPostal"));
+                customer.setCountry(rs.getString("CustCountry"));
+                customer.setHomePhone(rs.getString("CustHomePhone"));
+                customer.setBusPhone(rs.getString("CustBusPhone"));
+                customer.setEmail(rs.getString("CustEmail"));
+                customer.setAgentId(rs.getInt("AgentId"));
+                customer.setUserid(rs.getString("userid"));
+                return customer;
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new Exception("user does not exits");
+    }
 }
